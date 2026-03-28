@@ -1,0 +1,998 @@
+question_id,db_id,question,difficulty,sql_true,sql_pred,exec_result_true,exec_result_pred,EX,time_s,input_tokens,output_tokens,num_tool_calls
+1309,thrombosis_prediction,Please list a patient's platelet level if it is within the normal range and if he or she is diagnosed with MCTD.,moderate,SELECT T2.PLT FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T1.Diagnosis = 'MCTD' AND T2.PLT BETWEEN 100 AND 400,"SELECT p.ID, l.PLT
+FROM Patient p
+JOIN Laboratory l ON p.ID = l.ID
+WHERE p.Diagnosis = 'MCTD' AND l.PLT > 100 AND l.PLT < 400","PLT
+219
+222
+326
+286
+236
+278
+232
+272
+222
+231
+249
+202
+275
+255
+251
+211
+248
+191
+243
+292
+238
+364
+253
+284
+302
+351
+368
+356
+357
+362
+367
+349
+327
+328
+380
+336
+350
+287
+309
+333
+389
+327
+303
+304
+313
+309
+329
+347
+117
+350
+... (141 total rows)","ID | PLT
+81043 | 219
+81043 | 222
+81043 | 326
+81043 | 286
+81043 | 236
+81043 | 278
+81043 | 232
+81043 | 272
+81043 | 222
+81043 | 231
+81043 | 249
+81043 | 202
+81043 | 275
+81043 | 255
+81043 | 251
+81043 | 211
+81043 | 248
+81043 | 191
+81043 | 243
+81043 | 292
+81043 | 238
+81043 | 364
+81043 | 253
+81043 | 284
+81043 | 302
+81043 | 351
+81043 | 368
+81043 | 356
+81043 | 357
+81043 | 362
+81043 | 367
+81043 | 349
+81043 | 327
+81043 | 328
+81043 | 380
+81043 | 336
+81043 | 350
+81043 | 287
+81043 | 309
+81043 | 333
+81043 | 389
+81043 | 327
+81043 | 303
+81043 | 304
+81043 | 313
+81043 | 309
+81043 | 329
+81043 | 347
+81043 | 117
+81043 | 350
+... (141 total rows)",1,81.39,65391,1658,7
+228,toxicology,How much of the hydrogen in molecule TR206 is accounted for? Please provide your answer as a percentage with four decimal places.,moderate,"SELECT ROUND(CAST(COUNT(CASE WHEN T.element = 'h' THEN T.atom_id ELSE NULL END) AS REAL) * 100 / COUNT(T.atom_id),4) FROM atom AS T WHERE T.molecule_id = 'TR206'","SELECT printf('%.4f', CAST(SUM(CASE WHEN element = 'h' THEN 1 ELSE 0 END) AS REAL) * 100.0 / COUNT(*)) as hydrogen_percentage FROM atom WHERE molecule_id = 'TR206'","ROUND(CAST(COUNT(CASE WHEN T.element = 'h' THEN T.atom_id ELSE NULL END) AS REAL) * 100 / COUNT(T.atom_id),4)
+45.4545","hydrogen_percentage
+45.4545",1,55.34,54454,1864,8
+51,california_schools,In which mailing street address can you find the school that has the lowest average score in reading? Also give the school's name.,simple,"SELECT T2.MailStreet, T2.School FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode WHERE T1.AvgScrRead IS NOT NULL ORDER BY T1.AvgScrRead ASC LIMIT 1","SELECT schools.MailStreet, schools.School
+FROM satscores s
+JOIN schools ON s.cds = schools.CDSCode
+WHERE s.AvgScrRead = (SELECT MIN(AvgScrRead) FROM satscores WHERE AvgScrRead IS NOT NULL)","MailStreet | School
+1050 York Street | S.F. International High",(empty result),0,53.22,76215,1599,11
+1518,debit_card_specializing,"For the deal happened at 2012/8/24 12:42:00, which country was it?",simple,SELECT T2.Country FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID WHERE T1.Date = '2012-08-24' AND T1.Time = '12:42:00',"SELECT G.Country 
+FROM transactions_1k T1 
+JOIN gasstations G ON T1.GasStationID = G.GasStationID 
+WHERE T1.Date = '2012-08-24' AND T1.Time = '12:42:00'","Country
+CZE
+CZE","Country
+CZE
+CZE",1,35.67,24022,1328,6
+563,codebase_community,"User No.3025 gave a comment at 20:29:39 on 2014/4/23 to a post, how many favorite counts did that post get?",moderate,SELECT T1.FavoriteCount FROM posts AS T1 INNER JOIN comments AS T2 ON T1.Id = T2.PostId WHERE T2.CreationDate = '2014-04-23 20:29:39.0' AND T2.UserId = 3025,"SELECT p.FavoriteCount
+FROM comments c
+JOIN posts p ON c.PostId = p.Id
+WHERE c.UserId = 3025
+  AND c.CreationDate = '2014-04-23 20:29:39.0'","FavoriteCount
+3","FavoriteCount
+3",1,24.79,33434,1008,5
+501,card_games,Which card name in the set 'Journey into Nyx Hero's Path' has the highest converted mana cost.,moderate,SELECT T1.name FROM cards AS T1 INNER JOIN sets AS T2 ON T2.code = T1.setCode WHERE T2.name = 'Journey into Nyx Hero''s Path' ORDER BY T1.convertedManaCost DESC LIMIT 1,SELECT name FROM cards WHERE setCode = 'THP3' ORDER BY convertedManaCost DESC LIMIT 1,"name
+Hall of Triumph","name
+Hall of Triumph",1,39.41,91516,1303,9
+457,card_games,"Please list the websites where I can purchase the cards that have the promotional type of ""bundle"".",simple,SELECT DISTINCT purchaseUrls FROM cards WHERE promoTypes = 'bundle',"SELECT 'cardKingdom' as website FROM cards WHERE promoTypes = 'bundle' AND purchaseUrls LIKE ""%'cardKingdom':%"" 
+UNION
+SELECT 'cardKingdomFoil' as website FROM cards WHERE promoTypes = 'bundle' AND purchaseUrls LIKE ""%'cardKingdomFoil':%"" 
+UNION
+SELECT 'cardmarket' as website FROM cards WHERE promoTypes = 'bundle' AND purchaseUrls LIKE ""%'cardmarket':%"" 
+UNION
+SELECT 'tcgplayer' as website FROM cards WHERE promoTypes = 'bundle' AND purchaseUrls LIKE ""%'tcgplayer':%""","purchaseUrls
+{'cardKingdomFoil': 'https://mtgjson.com/links/c7b2529fff20e768', 'cardmarket': 'https://mtgjson.com/links/7e6bf16908b7608c', 'tcgplayer': 'https://mtgjson.com/links/ad765b504a5d53f9'}
+{'cardKingdomFoil': 'https://mtgjson.com/links/a38cfe08d940ddb5', 'cardmarket': 'https://mtgjson.com/links/28e6303cf1c21f26', 'tcgplayer': 'https://mtgjson.com/links/a029b7ffac8c8475'}
+{'cardKingdom': 'https://mtgjson.com/links/1880b37447ce45de', 'cardKingdomFoil': 'https://mtgjson.com/links/ca7452d85d349e76', 'tcgplayer': 'https://mtgjson.com/links/bde413266737f925'}
+{'cardKingdom': 'https://mtgjson.com/links/88bf4baa16ae1e7b', 'cardKingdomFoil': 'https://mtgjson.com/links/417543b3564936ea', 'tcgplayer': 'https://mtgjson.com/links/cc618485bbe5f3ac'}
+{'cardKingdom': 'https://mtgjson.com/links/7d3aa1c9dd41b84c', 'cardKingdomFoil': 'https://mtgjson.com/links/0b3787ce471cf48a', 'tcgplayer': 'https://mtgjson.com/links/0e3502e8d1da1fcf'}
+{'cardKingdom': 'https://mtgjson.com/links/58bcd4e13d34bc1c', 'cardKingdomFoil': 'https://mtgjson.com/links/7c10979c1403f144', 'tcgplayer': 'https://mtgjson.com/links/1f077a708eef8f24'}
+{'cardKingdom': 'https://mtgjson.com/links/aa48503382a6c5ca', 'cardKingdomFoil': 'https://mtgjson.com/links/9e4c48cc55b05f0c', 'tcgplayer': 'https://mtgjson.com/links/c99539677dd3cfb9'}
+{'cardKingdomFoil': 'https://mtgjson.com/links/1e38771472f1404c', 'cardmarket': 'https://mtgjson.com/links/63f47ef1e28a88a0', 'tcgplayer': 'https://mtgjson.com/links/2f68a75af1c76daf'}
+{'cardKingdomFoil': 'https://mtgjson.com/links/fbac9656bf64fbb9', 'cardmarket': 'https://mtgjson.com/links/258b42ef68e3edd4', 'tcgplayer': 'https://mtgjson.com/links/81f229eb07bb7205'}
+{'cardKingdomFoil': 'https://mtgjson.com/links/c38f731d9156a68c', 'tcgplayer': 'https://mtgjson.com/links/ac93de3a61548ef1'}
+{'cardKingdomFoil': 'https://mtgjson.com/links/3bae4d1eddb7ee48', 'cardmarket': 'https://mtgjson.com/links/32159e850c5c7051', 'tcgplayer': 'https://mtgjson.com/links/732ad744c63a7047'}
+{'cardKingdomFoil': 'https://mtgjson.com/links/6d489473746ddc6c', 'cardmarket': 'https://mtgjson.com/links/e14c5adb10ba8ecd', 'tcgplayer': 'https://mtgjson.com/links/516cae21b508444b'}","website
+cardKingdom
+cardKingdomFoil
+cardmarket
+tcgplayer",0,93.17,119028,2066,10
+285,toxicology,Name chemical elements that form a bond TR001_10_11.,challenging,SELECT T1.element FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id INNER JOIN bond AS T3 ON T2.bond_id = T3.bond_id WHERE T3.bond_id = 'TR001_10_11',"SELECT DISTINCT a.element
+FROM bond b
+JOIN atom a ON a.atom_id = SUBSTR(b.bond_id, 1, INSTR(b.bond_id, '_') + INSTR(SUBSTR(b.bond_id, INSTR(b.bond_id, '_') + 1), '_') - 1)
+WHERE b.bond_id = 'TR001_10_11'
+UNION
+SELECT DISTINCT a.element
+FROM bond b
+JOIN atom a ON a.atom_id = SUBSTR(b.bond_id, 1, INSTR(b.bond_id, '_')) || SUBSTR(b.bond_id, INSTR(b.bond_id, '_') + INSTR(SUBSTR(b.bond_id, INSTR(b.bond_id, '_') + 1), '_') + 1)
+WHERE b.bond_id = 'TR001_10_11'","element
+c
+o","element
+c
+o",1,116.97,149382,4419,20
+1508,debit_card_specializing,How many transactions taken place in the gas station in the Czech Republic are with a price of over 1000?,simple,SELECT COUNT(T1.TransactionID) FROM transactions_1k AS T1 INNER JOIN gasstations AS T2 ON T1.GasStationID = T2.GasStationID WHERE T2.Country = 'CZE' AND T1.Price > 1000,SELECT COUNT(*) FROM transactions_1k t JOIN gasstations g ON t.GasStationID = g.GasStationID WHERE g.Country = 'CZE' AND t.Price > 1000,"COUNT(T1.TransactionID)
+56","COUNT(*)
+56",1,33.94,29911,1353,8
+209,toxicology,Chlorine is in what type of bond?,simple,SELECT DISTINCT T1.bond_type FROM bond AS T1 INNER JOIN connected AS T2 ON T1.bond_id = T2.bond_id INNER JOIN atom AS T3 ON T2.atom_id = T3.atom_id WHERE T3.element = 'cl',"SELECT DISTINCT b.bond_type
+FROM connected c 
+JOIN bond b ON c.bond_id = b.bond_id 
+JOIN atom a ON (c.atom_id = a.atom_id OR c.atom_id2 = a.atom_id)
+WHERE a.element = 'cl'","bond_type
+-","bond_type
+-",1,95.74,78038,1759,12
+1385,student_club,Which student was able to generate income more than $40?,simple,"SELECT T1.first_name, T1.last_name FROM member AS T1 INNER JOIN income AS T2 ON T1.member_id = T2.link_to_member WHERE T2.amount > 40","SELECT DISTINCT m.first_name, m.last_name 
+FROM income i 
+JOIN member m ON i.link_to_member = m.member_id 
+WHERE i.amount > 40","first_name | last_name
+Adela | O'Gallagher
+Edwardo | Ing
+Amy | Firth
+Connor | Hilton
+Luisa | Guidi
+Brent | Thomason
+Keaton | Mccray
+Rafi | Mckee
+Elijah | Allen
+Dean | O'Reilly
+Garrett | Gerke
+Matthew | Snay
+Vincent | Ratcliffe
+Katy | Balentine
+Sherri | Ramsey
+Adele | Deleon
+Annabella | Warren
+Kevin | Pierce
+Casey | Mason
+Christof | Nielson
+Mccauley | Nash
+Sacha | Harrison
+Carlo | Jacobs
+Grant | Gilmour
+Phillip | Cullen
+Sacha | Harrison
+Angela | Sanders
+Tyler | Hewitt
+Madelyn | Nicholson
+Trent | Smith
+Emily | Jaquith
+Maya | Mclean
+Connor | Hilton","first_name | last_name
+Adela | O'Gallagher
+Edwardo | Ing
+Amy | Firth
+Connor | Hilton
+Luisa | Guidi
+Brent | Thomason
+Keaton | Mccray
+Rafi | Mckee
+Elijah | Allen
+Dean | O'Reilly
+Garrett | Gerke
+Matthew | Snay
+Vincent | Ratcliffe
+Katy | Balentine
+Sherri | Ramsey
+Adele | Deleon
+Annabella | Warren
+Kevin | Pierce
+Casey | Mason
+Christof | Nielson
+Mccauley | Nash
+Sacha | Harrison
+Carlo | Jacobs
+Grant | Gilmour
+Phillip | Cullen
+Angela | Sanders
+Tyler | Hewitt
+Madelyn | Nicholson
+Trent | Smith
+Emily | Jaquith
+Maya | Mclean",0,55.5,31502,1093,6
+1516,debit_card_specializing,How many transactions were paid in CZK in the morning of 2012/8/26?,moderate,SELECT COUNT(T1.TransactionID) FROM transactions_1k AS T1 INNER JOIN customers AS T2 ON T1.CustomerID = T2.CustomerID WHERE T1.Date = '2012-08-26' AND T1.Time < '13:00:00' AND T2.Currency = 'CZK',"SELECT COUNT(*) 
+FROM transactions_1k t
+JOIN customers c ON t.CustomerID = c.CustomerID
+WHERE t.Date = '2012-08-26' 
+  AND t.Time < '13:00:00'
+  AND c.Currency = 'CZK'","COUNT(T1.TransactionID)
+68","COUNT(*)
+68",1,38.76,36385,1236,8
+1116,european_football_2,List down most tallest players' name.,simple,"SELECT player_name FROM (SELECT player_name, height, DENSE_RANK() OVER (ORDER BY height DESC) as rank FROM Player) WHERE rank = 1",SELECT player_name FROM Player WHERE height = (SELECT MAX(height) FROM Player),"player_name
+Kristof van Hout","player_name
+Kristof van Hout",1,26.9,39313,1015,6
+178,financial,Which kind of credit card does client number 9 possess?,simple,SELECT T3.type FROM client AS T1 INNER JOIN disp AS T2 ON T1.client_id = T2.client_id INNER JOIN card AS T3 ON T2.disp_id = T3.disp_id WHERE T1.client_id = 9,"SELECT c.type 
+FROM card c 
+JOIN disp d ON c.disp_id = d.disp_id 
+WHERE d.client_id = 9","type
+gold","type
+gold",1,22.23,27996,810,7
+1209,thrombosis_prediction,Please provide the diagnosis of patients with ALT glutamic pylvic transaminase beyond the normal range by ascending order of their date of birth.,moderate,SELECT DISTINCT T1.Diagnosis FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.GPT > 60 ORDER BY T1.Birthday ASC,"SELECT DISTINCT p.Diagnosis, p.Birthday
+FROM Patient p
+JOIN Laboratory l ON p.ID = l.ID
+WHERE l.GPT > 60
+ORDER BY p.Birthday ASC","Diagnosis
+Adult STILL
+PSS, RA susp
+PNc
+MRA, SJS
+RA, UC
+PSS
+AORTITIS
+PSS, PM
+PN
+
+Vasculitis
+BEHCET
+SLE, SJS
+SLE
+PM/DM
+RA
+ITP
+MRA
+Sweet
+RA, SJS, PM
+PMPSSRA
+SLE, APS
+PSS, SJS, PBC
+SLE, ITP
+SLE susp
+MCTD
+PN, AGA
+DM
+Psoriatic Arthritis
+SLE, PM
+PM
+collagen susp
+relapsing polychondritis
+DM, SJS, RA
+SJS
+RA,SJS
+MCTD, SJS
+DM (amyopathic)","Diagnosis | Birthday
+MRA | 1922-12-01
+SLE | 1923-09-20
+RA | 1928-07-10
+Adult STILL | 1929-03-22
+SJS | 1930-02-15
+RA | 1931-05-27
+SLE | 1935-04-19
+PSS, RA susp | 1935-06-03
+PNc | 1936-10-30
+SLE | 1938-03-23
+MRA, SJS | 1939-05-30
+SJS | 1939-08-10
+RA, UC | 1941-07-10
+PSS | 1941-07-29
+PSS | 1941-11-21
+RA | 1942-03-04
+AORTITIS | 1943-03-21
+PSS, PM | 1943-03-21
+PN | 1943-06-02
+BEHCET | 1944-03-24
+ | 1944-04-25
+SLE | 1944-05-24
+SLE, APS | 1944-05-26
+Vasculitis | 1944-11-18
+SJS | 1946-02-19
+DM | 1946-05-12
+BEHCET | 1946-09-20
+SLE, SJS | 1947-03-17
+SLE | 1948-10-07
+PM/DM | 1949-05-11
+BEHCET | 1950-11-11
+SLE, SJS | 1951-05-16
+RA | 1952-08-22
+SLE | 1952-09-10
+DM | 1952-10-16
+SLE | 1953-04-06
+ITP | 1953-07-12
+RA | 1953-07-15
+MRA | 1954-01-24
+Sweet | 1954-01-30
+SLE, SJS | 1954-08-06
+SJS | 1954-12-23
+SLE | 1955-07-19
+SLE, APS | 1956-04-10
+RA, SJS, PM | 1956-06-25
+PMPSSRA | 1956-08-01
+BEHCET | 1957-11-06
+SLE | 1957-11-12
+BEHCET | 1958-07-23
+SLE, APS | 1959-01-05
+... (90 total rows)",0,43.42,102139,1463,9
+864,formula_1,"For the race happened on 2015/11/29, how many drivers finished the game?",simple,SELECT COUNT(T2.driverId) FROM races AS T1 INNER JOIN results AS T2 ON T2.raceId = T1.raceId WHERE T1.date = '2015-11-29' AND T2.time IS NOT NULL,SELECT COUNT(*) FROM results WHERE raceId = (SELECT raceId FROM races WHERE date = '2015-11-29') AND time IS NOT NULL,"COUNT(T2.driverId)
+11","COUNT(*)
+11",1,33.92,36129,1028,6
+65,california_schools,What is the ratio in percentage of Santa Clara County schools that are locally funded compared to all other types of charter school funding?,moderate,SELECT CAST(SUM(CASE WHEN FundingType = 'Locally funded' THEN 1 ELSE 0 END) AS REAL) * 100 / SUM(CASE WHEN FundingType != 'Locally funded' THEN 1 ELSE 0 END) FROM schools WHERE County = 'Santa Clara' AND Charter = 1,"SELECT 
+    CAST(SUM(CASE WHEN FundingType = 'Locally funded' THEN 1 ELSE 0 END) AS REAL) * 100.0 / 
+    SUM(CASE WHEN FundingType IS NOT NULL AND FundingType != 'Locally funded' THEN 1 ELSE 0 END) as ratio_percentage
+FROM schools 
+WHERE County = 'Santa Clara' AND Charter = 1","CAST(SUM(CASE WHEN FundingType = 'Locally funded' THEN 1 ELSE 0 END) AS REAL) * 100 / SUM(CASE WHEN FundingType != 'Locally funded' THEN 1 ELSE 0 END)
+33.333333333333336","ratio_percentage
+33.333333333333336",1,105.63,70566,5373,11
+61,california_schools,How many chartered schools located in the city of Hickman are owned by the Elementary School District?,simple,SELECT COUNT(School) FROM schools WHERE DOC = 52 AND Charter = 1 AND City = 'Hickman',SELECT COUNT(*) FROM schools WHERE City = 'Hickman' AND Charter = 1 AND DOC = '52',"COUNT(School)
+3","COUNT(*)
+3",1,31.2,35833,775,6
+191,financial,How many loan accounts are for pre-payment of duration of 24 months with weekly issuance of statement.,simple,SELECT COUNT(T2.account_id) FROM account AS T1 INNER JOIN loan AS T2 ON T1.account_id = T2.account_id WHERE T2.duration = 24 AND T1.frequency = 'POPLATEK TYDNE',"SELECT COUNT(*) AS loan_count
+FROM loan l
+JOIN account a ON l.account_id = a.account_id
+WHERE l.duration = 24
+  AND a.frequency = 'POPLATEK TYDNE'","COUNT(T2.account_id)
+15","loan_count
+15",1,22.23,17071,965,7
+447,card_games,Give the code of sets have expansion commander type?,simple,SELECT T2.setCode FROM sets AS T1 INNER JOIN set_translations AS T2 ON T2.setCode = T1.code WHERE T1.type = 'commander',SELECT code FROM sets WHERE type = 'commander',"setCode
+C13
+C13
+C13
+C13
+C13
+C13
+C13
+C13
+C13
+C13
+C14
+C14
+C14
+C14
+C14
+C14
+C14
+C14
+C14
+C14
+C15
+C15
+C15
+C15
+C15
+C15
+C15
+C15
+C15
+C15
+C16
+C16
+C16
+C16
+C16
+C16
+C16
+C16
+C16
+C16
+C17
+C17
+C17
+C17
+C17
+C17
+C17
+C17
+C17
+C17
+... (70 total rows)","code
+C13
+C14
+C15
+C16
+C17
+C18
+C19
+C20
+CM1
+CM2
+CMA
+CMD
+KHC
+ZNC",0,18.5,30057,498,4
+476,card_games,Please list the name of the cards in the set Coldsnap with the highest converted mana cost.,simple,SELECT T1.name FROM cards AS T1 INNER JOIN sets AS T2 ON T2.code = T1.setCode WHERE T2.name = 'Coldsnap' ORDER BY T1.convertedManaCost DESC LIMIT 1,SELECT name FROM cards WHERE setCode = 'CSP' AND convertedManaCost = (SELECT MAX(convertedManaCost) FROM cards WHERE setCode = 'CSP'),"name
+Sunscour","name
+Sunscour
+Commandeer
+Jokulmorder
+Rimefeather Owl
+Herald of Leshrac
+Soul Spike
+Tresserhorn Skyknight
+Fury of the Horde
+Rimescale Dragon
+Allosaurus Rider
+Panglacial Wurm
+Garza Zol, Plague Queen",0,52.42,73289,902,8
+1034,european_football_2,List the players' api id who had the highest above average overall ratings in 2010.,simple,"SELECT player_api_id FROM Player_Attributes WHERE SUBSTR(`date`, 1, 4) = '2010' ORDER BY overall_rating DESC LIMIT 1",,"player_api_id
+30657",ERROR: 'utf-8' codec can't decode byte 0x95 in position 956: invalid start byte,0,28.82,0,0,0
+1232,thrombosis_prediction,"Provide ID, sex and age of patient who has blood glucose (GLU) not within normal range but with total cholesterol(T-CHO) within normal range.",challenging,"SELECT DISTINCT T1.ID, T1.SEX , STRFTIME('%Y', CURRENT_TIMESTAMP) - STRFTIME('%Y', T1.Birthday) FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T2.GLU >= 180 AND T2.`T-CHO` < 250",,"ID | SEX | STRFTIME('%Y', CURRENT_TIMESTAMP) - STRFTIME('%Y', T1.Birthday)
+57266 | M | 103
+2371753 | F | 94
+3354706 | F | 90
+4432946 | M | 66
+4466420 | F | 96
+4466840 | F | 73
+4791049 | F | 87
+4792459 | M | 95
+5065022 | F | 55
+5093771 | F | 62
+5126587 | F | 62
+5405581 | F | 70
+5446559 | F | 95",ERROR,0,27.04,20358,686,4
+54,california_schools,Please specify all of the schools and their related mailing zip codes that are under Avetik Atoian's administration.,simple,"SELECT School, MailZip FROM schools WHERE AdmFName1 = 'Avetik' AND AdmLName1 = 'Atoian'","SELECT School, MailZip FROM schools WHERE AdmFName1 = 'Avetik' AND AdmLName1 = 'Atoian' OR AdmFName2 = 'Avetik' AND AdmLName2 = 'Atoian' OR AdmFName3 = 'Avetik' AND AdmLName3 = 'Atoian'","School | MailZip
+Fairview Middle | 93926-0238","School | MailZip
+Madera County Independent Academy | 93637
+Enterprise Secondary | 93637
+Juvenile Hall (Endeavor/Voyager Secondary) | 93637
+Pioneer Technical Center | 93637
+Fairview Middle | 93926-0238",0,18.7,16457,704,3
+1149,thrombosis_prediction,Are there more in-patient or outpatient who were male? What is the deviation in percentage?,moderate,SELECT CAST(SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) AS REAL) * 100 / SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END) FROM Patient WHERE SEX = 'M',"SELECT 
+    COUNT(CASE WHEN SEX = 'M' AND Admission = '+' THEN 1 END) as male_inpatient_count,
+    COUNT(CASE WHEN SEX = 'M' AND Admission = '-' THEN 1 END) as male_outpatient_count,
+    CASE 
+        WHEN COUNT(CASE WHEN SEX = 'M' AND Admission = '+' THEN 1 END) > COUNT(CASE WHEN SEX = 'M' AND Admission = '-' THEN 1 END) 
+        THEN 'in-patient' 
+        ELSE 'outpatient' 
+    END as more_common,
+    ABS(COUNT(CASE WHEN SEX = 'M' AND Admission = '+' THEN 1 END) - COUNT(CASE WHEN SEX = 'M' AND Admission = '-' THEN 1 END)) * 100.0 / 
+    COUNT(CASE WHEN SEX = 'M' AND Admission = '-' THEN 1 END) as deviation_percentage
+FROM Patient
+WHERE SEX = 'M'","CAST(SUM(CASE WHEN Admission = '+' THEN 1 ELSE 0 END) AS REAL) * 100 / SUM(CASE WHEN Admission = '-' THEN 1 ELSE 0 END)
+83.17757009345794","male_inpatient_count | male_outpatient_count | more_common | deviation_percentage
+89 | 107 | outpatient | 16.822429906542055",0,75.74,55769,2661,6
+407,card_games,Lists all types of cards in German.,moderate,"SELECT T1.subtypes, T1.supertypes FROM cards AS T1 INNER JOIN foreign_data AS T2 ON T1.uuid = T2.uuid WHERE T2.language = 'German' AND T1.subtypes IS NOT NULL AND T1.supertypes IS NOT NULL",SELECT DISTINCT type FROM foreign_data WHERE language = 'German' AND type IS NOT NULL AND TRIM(type) != '' ORDER BY type,"subtypes | supertypes
+Human,Rebel | Legendary
+Angel | Legendary
+Merfolk,Wizard | Legendary
+Vampire,Noble | Legendary
+Avatar,Minion | Legendary
+Human,Barbarian | Legendary
+Wizard | Legendary
+Cat,Warrior | Legendary
+Elemental | Legendary
+Goblin | Legendary
+Karn | Legendary
+Angel | Legendary
+Cat,Cleric | Legendary
+Human,Artificer | Legendary
+Human,Wizard | Legendary
+Jace | Legendary
+Zombie | Legendary
+Dragon,Skeleton | Legendary
+Human,Barbarian | Legendary
+Goblin | Legendary
+Kraken | Legendary
+Angel,Horror | Legendary
+Human | Legendary
+Artificer | Legendary
+Spirit,Cleric | Legendary
+Human,Artificer | Legendary
+Human,Artificer | Legendary
+Human,Cleric | Legendary
+Dragon | Legendary
+Insect,Shaman | Legendary
+Elf,Warrior | Legendary
+Human,Wizard | Legendary
+God | Legendary
+Human,Wizard | Legendary
+Sphinx | Legendary
+Vampire | Legendary
+Golem | Legendary
+Equipment | Legendary
+Karn | Legendary
+Jace | Legendary
+Cat,Soldier | Legendary
+Equipment | Legendary
+Dwarf,Advisor | Legendary
+Human,Wizard | Legendary
+Aetherborn,Vampire | Legendary
+Human,Pirate | Legendary
+Elf,Druid | Legendary
+Ajani | Legendary
+Tezzeret | Legendary
+Vehicle | Legendary
+... (1693 total rows)","type
+Artefakt
+Artefakt - Ausrüstung
+Artefakt — Ausrüstung
+Artefakt — Befestigung
+Artefakt — Fahrzeug
+Artefakt — Speise
+Artefakt, Land
+Artefaktkreatur
+Artefaktkreatur — Avatar
+Artefaktkreatur — Berserker
+Artefaktkreatur — Bestie
+Artefaktkreatur — Bold
+Artefaktkreatur — Chimäre
+Artefaktkreatur — Drache
+Artefaktkreatur — Drohne
+Artefaktkreatur — Eidechse
+Artefaktkreatur — Einhorn
+Artefaktkreatur — Elefant
+Artefaktkreatur — Elementarwesen
+Artefaktkreatur — Elf
+Artefaktkreatur — Engel
+Artefaktkreatur — Feenwesen, Handwerker
+Artefaktkreatur — Frosch
+Artefaktkreatur — Fuchs
+Artefaktkreatur — Gargoyle
+Artefaktkreatur — Gargoyle, Schrecken
+Artefaktkreatur — Geist
+Artefaktkreatur — Gestaltwandler
+Artefaktkreatur — Gnom
+Artefaktkreatur — Goblin
+Artefaktkreatur — Golem
+Artefaktkreatur — Golem, Krieger
+Artefaktkreatur — Golem, Legende
+Artefaktkreatur — Greif
+Artefaktkreatur — Hirsch
+Artefaktkreatur — Homunkulus
+Artefaktkreatur — Hund
+Artefaktkreatur — Hydra
+Artefaktkreatur — Illusion
+Artefaktkreatur — Insekt
+Artefaktkreatur — Juggernaut
+Artefaktkreatur — Katze
+Artefaktkreatur — Katze, Verbündeter
+Artefaktkreatur — Kleriker
+Artefaktkreatur — Konstrukt
+Artefaktkreatur — Krieger
+Artefaktkreatur — Leviathan
+Artefaktkreatur — Mastikor
+Artefaktkreatur — Mauer
+Artefaktkreatur — Mensch, Handwerker
+... (2149 total rows)",0,64.13,97251,1604,10
+1466,student_club,Write the full name of the club member with the position of 'Secretary' and list which college the club member belongs to.,simple,"SELECT T1.first_name, T1.last_name, college FROM member AS T1 INNER JOIN major AS T2 ON T2.major_id = T1.link_to_major WHERE T1.position = 'Secretary'","SELECT m.first_name, m.last_name, maj.college 
+FROM member m 
+JOIN major maj ON m.link_to_major = maj.major_id 
+WHERE m.position = 'Secretary'","first_name | last_name | college
+Annabella | Warren | College of Education & Human Services","first_name | last_name | college
+Annabella | Warren | College of Education & Human Services",1,39.79,28243,664,5
+1330,student_club,What college offers the major that Tyler Hewitt took?,simple,SELECT T2.college FROM member AS T1 INNER JOIN major AS T2 ON T1.link_to_major = T2.major_id WHERE T1.first_name = 'Tyler' AND T1.last_name = 'Hewitt',"SELECT m.college 
+FROM member mem 
+JOIN major m ON mem.link_to_major = m.major_id 
+WHERE mem.first_name = 'Tyler' AND mem.last_name = 'Hewitt'","college
+College of Engineering","college
+College of Engineering",1,43.86,33625,932,6
+1436,student_club,Please provide links to events for members who have paid more than 50 dollar.,simple,SELECT DISTINCT T3.link_to_event FROM expense AS T1 INNER JOIN member AS T2 ON T1.link_to_member = T2.member_id INNER JOIN attendance AS T3 ON T2.member_id = T3.link_to_member WHERE T1.cost > 50,"SELECT a.link_to_event 
+FROM attendance a 
+WHERE a.link_to_member IN (
+    SELECT link_to_member 
+    FROM income 
+    WHERE link_to_member IS NOT NULL 
+    GROUP BY link_to_member 
+    HAVING SUM(amount) > 50
+)","link_to_event
+rec2N69DMcrqN9PJC
+rec5XDvJLyxDsGZWc
+recEVTik3MlqbvLFi
+recGxVCwaLW3mDIa3
+recI43CzsZ0Q625ma
+recIuIXdbLe5j5vCA
+recLKj8BbTNqxFbTb
+recLrY8kyOR1PcZeF
+recggMW2eyCYceNcy
+reciRZdAqNIKuMC96
+reckYL4xtQWpkTJ8k
+recmbOVHSyzXQZpQr
+recoVo6dFSzG1ypX7
+recsgSUqFCJqekzL5
+recvCUOytx5jPw7kh
+recykdvf4LgsyA3wZ
+reczhS8wix6Kzbp9P","link_to_event
+recEVTik3MlqbvLFi
+recEVTik3MlqbvLFi
+recGxVCwaLW3mDIa3
+recI43CzsZ0Q625ma
+recI43CzsZ0Q625ma
+recIuIXdbLe5j5vCA
+recLKj8BbTNqxFbTb
+recLKj8BbTNqxFbTb
+recLrY8kyOR1PcZeF
+recggMW2eyCYceNcy
+recggMW2eyCYceNcy
+reciRZdAqNIKuMC96
+reciRZdAqNIKuMC96
+reckYL4xtQWpkTJ8k
+recmbOVHSyzXQZpQr
+recoVo6dFSzG1ypX7
+recsgSUqFCJqekzL5
+recvCUOytx5jPw7kh
+recykdvf4LgsyA3wZ
+recykdvf4LgsyA3wZ
+reczhS8wix6Kzbp9P
+reczhS8wix6Kzbp9P",0,56.03,60728,1996,11
+859,formula_1,What's Bruno Senna's Q1 result in the qualifying race No. 354?,simple,SELECT T1.q1 FROM qualifying AS T1 INNER JOIN drivers AS T2 ON T2.driverId = T1.driverId WHERE T1.raceId = 354 AND T2.forename = 'Bruno' AND T2.surname = 'Senna',,"q1
+1:23.796",ERROR: 'utf-8' codec can't decode byte 0x96 in position 266: invalid start byte,0,12.38,0,0,0
+451,card_games,How many cards available in paper have a positive starting maximum hand size?,simple,SELECT SUM(CASE WHEN availability = 'paper' AND hAND = '3' THEN 1 ELSE 0 END) FROM cards,SELECT COUNT(*) FROM cards WHERE availability LIKE '%paper%' AND hand IS NOT NULL AND CAST(hand AS INTEGER) > 0,"SUM(CASE WHEN availability = 'paper' AND hAND = '3' THEN 1 ELSE 0 END)
+3","COUNT(*)
+16",0,40.9,67083,1545,7
+919,formula_1,Which circuit did the 2009 Spanish Grand Prix use?,simple,SELECT T1.name FROM circuits AS T1 INNER JOIN races AS T2 ON T2.circuitID = T1.circuitId WHERE T2.year = 2009 AND T2.name = 'Spanish Grand Prix',SELECT c.name FROM circuits c JOIN races r ON c.circuitId = r.circuitId WHERE r.year = 2009 AND r.name = 'Spanish Grand Prix',"name
+Circuit de Barcelona-Catalunya","name
+Circuit de Barcelona-Catalunya",1,17.91,23483,680,5
+1206,thrombosis_prediction,When is the laboratory examination of patient '48473' where his/her AST glutamic oxaloacetic transaminase (GOT) index is above the normal range.,simple,SELECT Date FROM Laboratory WHERE ID = 48473 AND GOT >= 60,SELECT Date FROM Laboratory WHERE ID = '48473' AND GOT >= 60 ORDER BY Date,"Date
+1981-03-23
+1981-06-29
+1982-12-13
+1983-03-28
+1984-04-23
+1985-05-20
+1985-06-10","Date
+1981-03-23
+1981-06-29
+1982-12-13
+1983-03-28
+1984-04-23
+1985-05-20
+1985-06-10",1,24.64,56677,974,7
+569,codebase_community,Give the number of votes for the post about data visualization.,simple,SELECT COUNT(T1.Id) FROM posts AS T1 INNER JOIN votes AS T2 ON T1.Id = T2.PostId WHERE T1.Title LIKE '%data visualization%',"SELECT COUNT(v.Id) as total_votes 
+FROM posts p 
+JOIN votes v ON p.Id = v.PostId 
+WHERE p.Title LIKE '%data visualization%'","COUNT(T1.Id)
+83","total_votes
+83",1,115.1,81600,3110,12
+13,california_schools,Please list the phone numbers of the schools with the top 3 SAT excellence rate.,simple,SELECT T1.Phone FROM schools AS T1 INNER JOIN satscores AS T2 ON T1.CDSCode = T2.cds ORDER BY CAST(T2.NumGE1500 AS REAL) / T2.NumTstTakr DESC LIMIT 3,"SELECT sch.Phone
+FROM satscores s
+JOIN schools sch ON s.cds = sch.CDSCode
+WHERE s.NumTstTakr > 0
+ORDER BY CAST(s.NumGE1500 AS REAL) / s.NumTstTakr DESC
+LIMIT 3","Phone
+(714) 220-3055
+(562) 229-7745
+(408) 366-7700","Phone
+(714) 220-3055
+(562) 229-7745
+(408) 366-7700",1,36.2,39412,937,6
+326,toxicology,Which molecule consisted of Sulphur atom with double bond?,simple,SELECT DISTINCT T1.molecule_id FROM atom AS T1 INNER JOIN bond AS T2 ON T1.molecule_id = T2.molecule_id WHERE T1.element = 's' AND T2.bond_type = '=',"SELECT DISTINCT a.molecule_id
+FROM atom a
+JOIN connected c ON a.atom_id = c.atom_id OR a.atom_id = c.atom_id2
+JOIN bond b ON c.bond_id = b.bond_id
+WHERE a.element = 's' AND b.bond_type = '='","molecule_id
+TR004
+TR015
+TR018
+TR020
+TR024
+TR031
+TR045
+TR046
+TR047
+TR050
+TR051
+TR053
+TR056
+TR057
+TR062
+TR069
+TR070
+TR084
+TR096
+TR101
+TR102
+TR103
+TR113
+TR115
+TR124
+TR126
+TR129
+TR132
+TR135
+TR136
+TR137
+TR138
+TR146
+TR148
+TR149
+TR151
+TR152
+TR157
+TR166
+TR172
+TR192
+TR208
+TR211
+TR220
+TR225
+TR234
+TR238
+TR268
+TR296
+TR307
+... (68 total rows)","molecule_id
+TR018
+TR020
+TR031
+TR045
+TR046
+TR050
+TR051
+TR056
+TR062
+TR084
+TR101
+TR102
+TR113
+TR115
+TR124
+TR126
+TR129
+TR132
+TR138
+TR148
+TR149
+TR151
+TR152
+TR166
+TR172
+TR208
+TR211
+TR220
+TR225
+TR234
+TR238
+TR268
+TR296
+TR307
+TR335
+TR356
+TR357
+TR387
+TR388
+TR395
+TR397
+TR405
+TR412
+TR430
+TR457
+TR464
+TR501",0,30.72,53615,1362,10
+1429,student_club,What is the name of the social event that was attended by the vice president of the Student_Club located at 900 E. Washington St.?,challenging,SELECT T2.event_name FROM attendance AS T1 INNER JOIN event AS T2 ON T2.event_id = T1.link_to_event INNER JOIN member AS T3 ON T1.link_to_member = T3.member_id WHERE T3.position = 'Vice President' AND T2.location = '900 E. Washington St.' AND T2.type = 'Social',"SELECT e.event_name
+FROM attendance a
+JOIN member m ON a.link_to_member = m.member_id
+JOIN event e ON a.link_to_event = e.event_id
+WHERE m.position = 'Vice President'
+  AND e.location = '900 E. Washington St.'
+  AND e.type = 'Social'","event_name
+Laugh Out Loud","event_name
+Laugh Out Loud",1,46.92,30296,1229,7
+865,formula_1,"For all the drivers who finished the game in race No. 592, who is the oldest?",moderate,"SELECT T1.forename, T1.surname FROM drivers AS T1 INNER JOIN results AS T2 ON T2.driverId = T1.driverId WHERE T2.raceId = 592 AND T2.time IS NOT NULL AND T1.dob IS NOT NULL ORDER BY T1.dob ASC LIMIT 1","SELECT d.forename, d.surname, d.dob 
+FROM results r 
+JOIN drivers d ON r.driverId = d.driverId 
+WHERE r.raceId = 592 AND r.time IS NOT NULL
+ORDER BY d.dob ASC
+LIMIT 1","forename | surname
+Jean-Pierre | Beltoise","forename | surname | dob
+Jean-Pierre | Beltoise | 1937-04-26",1,31.81,39379,1274,6
+696,codebase_community,Count the number of posts with a tag specified as 'careers'.,simple,SELECT COUNT(Id) FROM tags WHERE TagName = 'careers',SELECT COUNT(*) FROM posts WHERE Tags LIKE '%<careers>%',"COUNT(Id)
+1","COUNT(*)
+22",0,17.17,34448,695,6
+318,toxicology,What is the molecule id of bond id TR001_1_7?,simple,SELECT DISTINCT T1.molecule_id FROM atom AS T1 INNER JOIN connected AS T2 ON T1.atom_id = T2.atom_id WHERE T2.bond_id = 'TR001_1_7',SELECT molecule_id FROM bond WHERE bond_id = 'TR001_1_7',"molecule_id
+TR001","molecule_id
+TR001",1,14.39,19533,503,3
+440,card_games,"Which foreign language used by ""A Pedra Fellwar""?",simple,SELECT DISTINCT language FROM foreign_data WHERE name = 'A Pedra Fellwar',SELECT DISTINCT language FROM foreign_data WHERE name = 'A Pedra Fellwar',"language
+Portuguese (Brazil)","language
+Portuguese (Brazil)",1,29.48,29019,679,4
+689,codebase_community,"Identify the display name and location of the user, who was the last to edit the post with ID 183.",simple,"SELECT T2.DisplayName, T2.Location FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id WHERE T1.Id = 183 ORDER BY T1.LastEditDate DESC LIMIT 1","SELECT u.DisplayName, u.Location 
+FROM posts p 
+LEFT JOIN users u ON p.LastEditorUserId = u.Id 
+WHERE p.Id = 183","DisplayName | Location
+Vitor De Mario | Rio de Janeiro","DisplayName | Location
+None | None",0,139.68,170620,3393,20
+189,financial,Name the account numbers of female clients who are oldest and have lowest average salary?,moderate,"SELECT T3.account_id FROM client AS T1 INNER JOIN district AS T2 ON T1.district_id = T2.district_id INNER JOIN account AS T3 ON T2.district_id = T3.district_id INNER JOIN disp AS T4 ON T1.client_id = T4.client_id AND T4.account_id = T3.account_id  WHERE T1.gender = 'F' ORDER BY T1.birth_date ASC, T2.A11 ASC LIMIT 1",,"account_id
+1743",ERROR,0,10.89,8819,544,4
+778,superhero,Provide superheroes' names who have the adaptation power.,simple,SELECT T1.superhero_name FROM superhero AS T1 INNER JOIN hero_power AS T2 ON T1.id = T2.hero_id INNER JOIN superpower AS T3 ON T2.power_id = T3.id WHERE T3.power_name = 'Adaptation',"SELECT s.superhero_name
+FROM superhero s
+JOIN hero_power hp ON s.id = hp.hero_id
+JOIN superpower sp ON hp.power_id = sp.id
+WHERE sp.power_name = 'Adaptation'","superhero_name
+Alex Mercer
+Doomsday
+Legion
+Man of Miracles
+Vegeta","superhero_name
+Alex Mercer
+Doomsday
+Legion
+Man of Miracles
+Vegeta",1,35.56,29470,758,7
+198,toxicology,On average how many carcinogenic molecules are single bonded?,challenging,"SELECT AVG(single_bond_count) FROM (SELECT T3.molecule_id, COUNT(T1.bond_type) AS single_bond_count FROM bond AS T1  INNER JOIN atom AS T2 ON T1.molecule_id = T2.molecule_id INNER JOIN molecule AS T3 ON T3.molecule_id = T2.molecule_id WHERE T1.bond_type = '-' AND T3.label = '+' GROUP BY T3.molecule_id) AS subquery","SELECT AVG(single_bond_count) as avg_single_bonds
+FROM (
+    SELECT m.molecule_id, COUNT(b.bond_id) as single_bond_count
+    FROM molecule m
+    LEFT JOIN bond b ON m.molecule_id = b.molecule_id AND b.bond_type = '-'
+    WHERE m.label = '+'
+    GROUP BY m.molecule_id
+)","AVG(single_bond_count)
+732.125","avg_single_bonds
+20.25",0,32.46,59599,1193,10
+735,superhero,How many superheroes with blonde hair are there?,simple,SELECT COUNT(T1.id) FROM superhero AS T1 INNER JOIN colour AS T2 ON T1.hair_colour_id = T2.id WHERE T2.colour = 'Blond',"SELECT COUNT(*) 
+FROM superhero s 
+JOIN colour c ON s.hair_colour_id = c.id 
+WHERE c.colour = 'Blond'","COUNT(T1.id)
+105","COUNT(*)
+105",1,18.5,28526,621,6
+704,codebase_community,What is the excerpt post ID and wiki post ID of the tag named sample?,simple,"SELECT ExcerptPostId, WikiPostId FROM tags WHERE TagName = 'sample'","SELECT ExcerptPostId, WikiPostId 
+FROM tags 
+WHERE TagName = 'sample'","ExcerptPostId | WikiPostId
+28276 | 28275","ExcerptPostId | WikiPostId
+28276 | 28275",1,25.31,18518,587,3
+1236,thrombosis_prediction,"For all the female patient age 50 and above, who has abnormal red blood cell count. State if they were admitted to hospital.",challenging,"SELECT DISTINCT T1.ID, T1.Admission FROM Patient AS T1 INNER JOIN Laboratory AS T2 ON T1.ID = T2.ID WHERE T1.SEX = 'F' AND (T2.RBC <= 3.5 OR T2.RBC >= 6.0) AND STRFTIME('%Y', CURRENT_TIMESTAMP) - STRFTIME('%Y', T1.Birthday) >= 50","SELECT DISTINCT p.ID, 
+       CASE WHEN p.Admission = '+' THEN 'Yes' ELSE 'No' END as Admitted_to_Hospital
+FROM Patient p
+JOIN Laboratory l ON p.ID = l.ID
+WHERE p.SEX = 'F'
+  AND (strftime('%Y', 'now') - strftime('%Y', p.Birthday)) >= 50
+  AND (l.RBC <= 3.5 OR l.RBC >= 6.0)
+  AND l.RBC IS NOT NULL","ID | Admission
+27654 | +
+30609 | -
+48473 | +
+58139 | -
+71417 | -
+125619 | +
+130370 | +
+525998 | -
+528900 | -
+619178 | -
+912147 | +
+940737 | +
+944797 | +
+1043570 | -
+1061042 | +
+1078741 | +
+1124385 | -
+1130007 | +
+1138737 | +
+1180510 | -
+1567380 | +
+1617548 | +
+1622238 | 
+1711181 | -
+1755350 | -
+1923445 | +
+2256652 | -
+2265184 | +
+2276582 | -
+2308236 | +
+2315140 | +
+2343945 | +
+2355809 | -
+2370675 | +
+2395148 | +
+2931207 | -
+2933261 | +
+3171569 | +
+3174630 | +
+3215988 | +
+3310582 | -
+3334746 | +
+3413715 | +
+3418071 | +
+3545964 | -
+3562042 | +
+4416959 | -
+4417978 | -
+4424808 | +
+4425292 | +
+... (77 total rows)","ID | Admitted_to_Hospital
+27654 | Yes
+30609 | No
+48473 | Yes
+58139 | No
+71417 | No
+125619 | Yes
+130370 | Yes
+525998 | No
+528900 | No
+619178 | No
+912147 | Yes
+940737 | Yes
+944797 | Yes
+1043570 | No
+1061042 | Yes
+1078741 | Yes
+1124385 | No
+1130007 | Yes
+1138737 | Yes
+1180510 | No
+1567380 | Yes
+1617548 | Yes
+1622238 | No
+1711181 | No
+1755350 | No
+1923445 | Yes
+2256652 | No
+2265184 | Yes
+2276582 | No
+2308236 | Yes
+2315140 | Yes
+2343945 | Yes
+2355809 | No
+2370675 | Yes
+2395148 | Yes
+2931207 | No
+2933261 | Yes
+3171569 | Yes
+3174630 | Yes
+3215988 | Yes
+3310582 | No
+3334746 | Yes
+3413715 | Yes
+3418071 | Yes
+3545964 | No
+3562042 | Yes
+4416959 | No
+4417978 | No
+4424808 | Yes
+4425292 | Yes
+... (77 total rows)",0,38.11,85070,1744,8
+541,codebase_community,What is the display name of the user who is the owner of the most valuable post?,simple,SELECT T2.DisplayName FROM posts AS T1 INNER JOIN users AS T2 ON T1.OwnerUserId = T2.Id ORDER BY T1.FavoriteCount DESC LIMIT 1,"SELECT u.DisplayName
+FROM posts p
+JOIN users u ON p.OwnerUserId = u.Id
+WHERE p.FavoriteCount IS NOT NULL
+ORDER BY p.FavoriteCount DESC
+LIMIT 1","DisplayName
+Fabian Fagerholm","DisplayName
+Fabian Fagerholm",1,31.52,35617,773,6
+88,california_schools,What is the administrator's email address for the school with the highest number of test takers who received SAT scores of at least 1500?Provide the name of the school.,simple,"SELECT T2.AdmEmail1, T2.School FROM satscores AS T1 INNER JOIN schools AS T2 ON T1.cds = T2.CDSCode ORDER BY T1.NumGE1500 DESC LIMIT 1","SELECT s.School, s.AdmEmail1 
+FROM schools s 
+JOIN satscores sat ON s.CDSCode = sat.cds 
+WHERE sat.NumGE1500 IS NOT NULL AND s.School IS NOT NULL
+ORDER BY sat.NumGE1500 DESC 
+LIMIT 1","AdmEmail1 | School
+michelle.king@lausd.net | None","School | AdmEmail1
+Lowell High | ishibashia@sfusd.edu",0,62.19,66362,1761,10

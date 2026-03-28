@@ -19,3 +19,36 @@
 - End-to-end аналитика с применением инструментов прогнозирования на основе полученных данных
 - Поиск и интеграция инсайтов из внешних источников (например, объяснение падения метрик через внешние события)
 
+## Быстрый старт
+
+1. Скопируйте `.env.example` в `.env` и укажите ключ OpenRouter:
+  ```bash
+   cp .env.example .env
+  ```
+2. Установите зависимости:
+  ```bash
+   poetry install
+  ```
+3. Скачайте данные BIRD и подготовьте документацию — см. [docs/data-setup.md](docs/data-setup.md)
+4. Запустите веб-интерфейс:
+  ```bash
+   poetry run python scripts/run_text2sql_web.py
+  ```
+
+## Документация
+
+
+| Документ                                             | Описание                                                        |
+| ---------------------------------------------------- | --------------------------------------------------------------- |
+| [docs/product-proposal.md](docs/product-proposal.md) | Цели, метрики, сценарии использования                           |
+| [docs/system-design.md](docs/system-design.md)       | Архитектурные решения, модули, workflow, контракты, ограничения |
+| [docs/architecture.md](docs/architecture.md)         | Обзор архитектуры и возможностей агента                         |
+| [docs/data-setup.md](docs/data-setup.md)             | Инструкция по загрузке данных BIRD                              |
+| [docs/governance.md](docs/governance.md)             | Риски и меры безопасности                                       |
+
+
+**Диаграммы** (`docs/diagrams/`):
+[C4 Context](docs/diagrams/c4-context.md) · [C4 Container](docs/diagrams/c4-container.md) · [C4 Component](docs/diagrams/c4-component.md) · [Workflow](docs/diagrams/workflow.md) · [Data Flow](docs/diagrams/data-flow.md)
+
+**Спецификации модулей** (`docs/specs/`):
+[Retriever](docs/specs/retriever.md) · [Tools](docs/specs/tools.md) · [Memory/Context](docs/specs/memory-context.md) · [Agent/Orchestrator](docs/specs/agent-orchestrator.md) · [Serving/Config](docs/specs/serving-config.md)
